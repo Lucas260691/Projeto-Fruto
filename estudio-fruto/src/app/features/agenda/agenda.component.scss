@@ -1,0 +1,114 @@
+/* Estilização Geral */
+.agenda-container {
+    margin: 20px auto;
+    overflow-x: auto;
+    max-width: 90%;
+  }
+  
+  /* Tabela de Agenda */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+  
+  thead th {
+    background-color: #007bff; /* Azul padrão para cabeçalho */
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  tbody td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Cinza claro para linhas pares */
+  }
+  
+  /* Células da Tabela */
+  .celula-aula {
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff; /* Texto branco para contraste com o fundo colorido */
+    font-size: 0.9rem;
+  }
+  
+  .celula-aula ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .celula-aula li {
+    margin: 2px 0;
+    font-weight: bold;
+  }
+  
+  /* Botão de Adicionar Aula */
+  button {
+    background-color: #28a745; /* Verde padrão */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  /* Legenda */
+  .legenda-container {
+    margin-bottom: 20px;
+  }
+  
+  .legenda {
+    border-collapse: collapse;
+    width: 50%;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  .legenda th,
+  .legenda td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .legenda th {
+    background-color: #f2f2f2; /* Fundo cinza claro para o cabeçalho */
+    color: #333;
+  }
+  
+  .cor-legenda {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .agenda-container {
+      max-width: 100%;
+    }
+  
+    table {
+      font-size: 0.8rem;
+    }
+  
+    .legenda {
+      width: 100%;
+    }
+  }
+  

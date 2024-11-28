@@ -1,0 +1,47 @@
+<h1>Agenda de Aulas</h1>
+
+<div class="legenda-container">
+  <h3>Legenda de Instrutores</h3>
+  <table class="legenda">
+    <thead>
+      <tr>
+        <th>Cor</th>
+        <th>Instrutor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let instrutor of instrutores">
+        <td>
+          <div class="cor-legenda" [ngStyle]="{'background-color': instrutor.cor}"></div>
+        </td>
+        <td>{{ instrutor.nome }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="agenda-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Horário</th>
+        <th *ngFor="let dia of diasDaSemana">{{ dia }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let horario of horarios">
+        <td>{{ horario }}</td>
+        <td *ngFor="let dia of diasDaSemana">
+          <div
+            class="celula-aula"
+            [ngStyle]="{'background-color': getCorInstrutor(agenda[horario][dia]?.instrutor)}"
+          >
+            <ul>
+              <li *ngFor="let aluno of agenda[horario][dia]?.alunos">{{ aluno }}</li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
