@@ -1,82 +1,99 @@
-<h1>Fruto Agenda</h1>
+<div class="agenda-container">
+  <!-- Barra Superior com Data Atual -->
+  <div class="barra-superior">
+    <button (click)="mudarDia(-1)">&#9664; Dia Anterior</button>
+    <span>{{ diaAtual | date: 'EEEE, dd MMMM yyyy' }}</span>
+    <button (click)="mudarDia(1)">Próximo Dia &#9654;</button>
+  </div>
 
-<div class="legendas-container">
-    <!-- Mini tabela para os instrutores -->
-    <div class="legenda-instrutores">
-      <h3>Legenda de Instrutores</h3>
-      <table class="legenda">
-        <thead>
-          <tr>
-            <th>Cor</th>
-            <th>Instrutor</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let instrutor of instrutores">
-            <td>
-              <div class="cor-legenda" [ngStyle]="{'background-color': instrutor.cor}"></div>
-            </td>
-            <td>{{ instrutor.nome }}</td> <!-- Apenas o nome do instrutor -->
-          </tr>
-        </tbody>
-      </table>
+  <div class="layout-principal">
+    <!-- Calendário Lateral -->
+    <div class="calendario-lateral">
+      <h3>Calendário</h3>
+      <div class="navegacao-mes">
+        <button (click)="mudarMes(-1)">&#9664;</button>
+        <span>{{ mesAtual }} {{ anoAtual }}</span>
+        <button (click)="mudarMes(1)">&#9654;</button>
+      </div>
+      <div class="dias-semana">
+        <span *ngFor="let dia of diasSemana">{{ dia }}</span>
+      </div>
+      <div class="dias">
+        <button
+          *ngFor="let dia of diasDoMes"
+          [class.ativo]="dia === diaAtual.getDate()"
+          (click)="selecionarDia(dia)"
+        >
+          {{ dia }}
+        </button>
+      </div>
     </div>
-  
-    <!-- Nova tabela para as salas -->
-    <div class="legenda-salas">
-      <h3>Rodizio das Turmas</h3>
-      <table class="legenda">
+
+    <!-- Legenda dos Instrutores e Turmas -->
+    <div class="legendas">
+      <!-- Legenda dos Instrutores -->
+      <div class="legenda-instrutores">
+        <h3>Legenda dos Instrutores</h3>
+        <ul>
+          <li *ngFor="let instrutor of instrutores">
+            <span [style.background-color]="instrutor.cor" class="cor-instrutor"></span>
+            {{ instrutor.nome }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Rodízio das Turmas -->
+      <div class="rodizio-turmas">
+        <h3>Rodízio das Turmas</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Dia</th>
+              <th>Sala</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dia of diasDaSemana">
+              <td>{{ dia }}</td>
+              <td>
+                <select [(ngModel)]="salas[dia].nome">
+                  <option *ngFor="let sala of listaSalas">{{ sala }}</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agenda -->
+    <div class="agenda">
+      <table>
         <thead>
           <tr>
-            <th>Dia da Semana</th>
-            <th>Sala</th>
-            <th>Cor</th>
+            <th>Horário</th>
+            <th *ngFor="let dia of diasDaSemana">{{ dia }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let dia of diasDaSemana">
-            <td>{{ dia }}</td>
-            <td>
-              <select [(ngModel)]="salas[dia].nome">
-                <option *ngFor="let sala of listaSalas" [value]="sala">{{ sala }}</option>
-              </select>
-            </td>
-            <td>
+          <tr *ngFor="let horario of horarios">
+            <td>{{ horario }}</td>
+            <td *ngFor="let dia of diasDaSemana">
+              <!-- Células da agenda -->
               <div
-                class="cor-legenda"
-                [ngStyle]="{'background-color': salas[dia]?.cor || '#f0f0f0'}"
-                (click)="selecionarCor(dia)"
-              ></div>
+                class="celula-aula"
+                [style.background-color]="getCorInstrutor(agenda[horario][dia]?.instrutor || null)"
+              >
+                <ul>
+                  <li *ngFor="let aluno of agenda[horario][dia]?.alunos">
+                    {{ aluno }}
+                  </li>
+                </ul>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-
-  <!-- Nova tabela para Agenda-->
-  <div class="agenda-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Horário</th>
-          <th *ngFor="let dia of diasDaSemana">{{ dia }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let horario of horarios">
-          <td>{{ horario }}</td>
-          <td *ngFor="let dia of diasDaSemana">
-            <div
-              class="celula-aula"
-              [ngStyle]="{'background-color': getCorInstrutor(agenda[horario][dia]?.instrutor)}"
-            >
-              <ul>
-                <li *ngFor="let aluno of agenda[horario][dia]?.alunos">{{ aluno }}</li>
-              </ul>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+</div>

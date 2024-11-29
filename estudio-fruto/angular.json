@@ -67,6 +67,11 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json", 
+            "port": 4200,                   
+            "open": true                     
+          },
           "configurations": {
             "production": {
               "buildTarget": "estudio-fruto:build:production"

@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-agenda',
   standalone: true,
   templateUrl: './agenda.component.html',
   styleUrls: ['./agenda.component.scss'],
-  imports: [CommonModule,FormsModule] 
+  imports: [CommonModule, FormsModule, DragDropModule]
 })
 export class AgendaComponent implements OnInit {
   diasDaSemana: string[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  diasSemana: string[] = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  diasDoMes: number[] = [];
   listaSalas: string[] = ['Reformer', 'Cadillac', 'Chair', 'Mat', 'Barrel'];
   horarios: string[] = [
     '08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00',
@@ -27,13 +30,51 @@ export class AgendaComponent implements OnInit {
     { nome: 'Carlos', cor: '#dc3545' }
   ];
 
-  salas: any = {};
-
-  agenda: any = {};
+  salas: Record<string, { nome: string; cor: string | null }> = {};
+  agenda: Record<string, Record<string, { alunos: string[]; instrutor: string | null }>> = {};
+  diaAtual: Date = new Date();
+  anoAtual: number = this.diaAtual.getFullYear();
+  meses: string[] = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+  mesAtual: string = '';
 
   ngOnInit(): void {
+    this.mesAtual = this.meses[this.diaAtual.getMonth()];
+    this.atualizarDiasDoMes();
     this.inicializarAgenda();
     this.inicializarSalas();
+  }
+
+  mudarDia(delta: number): void {
+    const novaData = new Date(this.diaAtual);
+    novaData.setDate(this.diaAtual.getDate() + delta);
+    this.diaAtual = novaData;
+    console.log(`Novo dia: ${this.diaAtual.toLocaleDateString()}`);
+  }
+
+  mudarMes(delta: number): void {
+    const novaData = new Date(this.diaAtual);
+    novaData.setMonth(this.diaAtual.getMonth() + delta);
+    this.diaAtual = novaData;
+
+    this.mesAtual = this.meses[this.diaAtual.getMonth()];
+    this.anoAtual = this.diaAtual.getFullYear();
+    this.atualizarDiasDoMes();
+  }
+
+  atualizarDiasDoMes(): void {
+    const primeiroDia = new Date(this.anoAtual, this.diaAtual.getMonth(), 1);
+    const ultimoDia = new Date(this.anoAtual, this.diaAtual.getMonth() + 1, 0);
+    this.diasDoMes = Array.from({ length: ultimoDia.getDate() }, (_, i) => i + 1);
+  }
+
+  selecionarDia(dia: number): void {
+    const novaData = new Date(this.diaAtual);
+    novaData.setDate(dia);
+    this.diaAtual = novaData;
+    console.log(`Dia selecionado: ${this.diaAtual.toLocaleDateString()}`);
   }
 
   inicializarAgenda(): void {
@@ -50,26 +91,46 @@ export class AgendaComponent implements OnInit {
 
   inicializarSalas(): void {
     this.diasDaSemana.forEach((dia) => {
-      this.salas[dia] = { nome: '', cor: null }; // Sala dinâmica e cor
+      this.salas[dia] = { nome: '', cor: null };
     });
   }
 
-  getCorInstrutor(instrutor: string | null): string {
+  carregarAgenda(): void {
+    console.log(`Carregando agenda para ${this.diaAtual.toLocaleDateString()}`);
+  }
+
+  getCorInstrutor(instrutor: string | null | undefined): string {
+    if (!instrutor) {
+      return '#f0f0f0'; // Cor padrão caso o instrutor não esteja definido
+    }
     const instrutorEncontrado = this.instrutores.find(i => i.nome === instrutor);
     return instrutorEncontrado ? instrutorEncontrado.cor : '#f0f0f0';
   }
 
   selecionarCor(dia: string): void {
-    const instrutorSelecionado = prompt(
+    const instrutorSelecionado: string | null = prompt(
       'Digite o nome do instrutor para escolher a cor:\n' +
       this.instrutores.map(i => `${i.nome} (${i.cor})`).join('\n')
     );
-
+  
+    if (instrutorSelecionado === null || instrutorSelecionado.trim() === '') {
+      alert('Nenhum instrutor foi selecionado.');
+      return;
+    }
+  
     const instrutor = this.instrutores.find(i => i.nome === instrutorSelecionado);
     if (instrutor) {
       this.salas[dia].cor = instrutor.cor;
     } else {
       alert('Instrutor não encontrado!');
     }
+  }
+  
+
+  rodizioSalas(): void {
+    this.diasDaSemana.forEach((dia, index) => {
+      const salaIndex = index % this.listaSalas.length;
+      this.salas[dia].nome = this.listaSalas[salaIndex];
+    });
   }
 }
