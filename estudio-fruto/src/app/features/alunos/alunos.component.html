@@ -1,1 +1,49 @@
-<p>alunos works!</p>
+<div class="aluno-container">
+    <h2>Cadastro de Aluno</h2>
+    <form (submit)="salvarAluno()">
+      <div class="form-group">
+        <label for="nome">Nome Completo</label>
+        <input type="text" id="nome" [(ngModel)]="aluno.nome" name="aluno" placeholder="Digite o nome do aluno" required />
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" [(ngModel)]="aluno.email" name="email" placeholder="Digite o e-mail do aluno" required />
+      </div>
+      <div class="form-group">
+        <label for="contato">Telefone</label>
+        <input type="tel" id="contato" [(ngModel)]="aluno.contato" name="contato" placeholder="Digite o telefone do aluno" required />
+      </div>
+      <div class="form-group">
+        <label for="codAlune">Código do Aluno</label>
+        <input type="text" id="codAlune" [(ngModel)]="aluno.codAlune" name="codAlune" placeholder="Digite o código do aluno" />
+      </div>
+      <div class="form-group">
+        <label for="tipoPlano">Tipo de Plano</label>
+        <select id="tipoPlano" [(ngModel)]="aluno.tipoPlano" name="tipoPlano" required>
+          <option value="" disabled selected>Selecione o tipo de plano</option>
+          <option value="teste">Mês Teste</option>
+          <option value="trimestral">Trimestral</option>
+          <option value="semestral">Semestral</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="frequenciaSemanal">Frequência Semanal</label>
+        <select id="frequenciaSemanal" [(ngModel)]="aluno.frequenciaSemanal" name="frequenciaSemanal" required>
+          <option value="" disabled selected>Selecione a frequência</option>
+          <option value="1x">1x por semana</option>
+          <option value="2x">2x por semana</option>
+          <option value="3x">3x por semana</option>
+          <option value="4x">4x por semana</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="diasFixos">Dias Fixos</label>
+        <input type="text" id="diasFixos" [(ngModel)]="aluno.diasFixos" name="diasFixo" placeholder="Digite os dias fixos (ex: Segunda, Quarta)" />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Salvar</button>
+        <button type="button" class="btn-clear" (click)="limparFormulario()">Limpar</button>
+      </div>
+    </form>
+  </div>
+  

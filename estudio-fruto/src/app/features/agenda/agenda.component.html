@@ -56,7 +56,7 @@
             <tr *ngFor="let dia of diasDaSemana">
               <td>{{ dia }}</td>
               <td>
-                <select [(ngModel)]="salas[dia].nome">
+                <select [(ngModel)]="salas[dia].nome" name="sala">
                   <option *ngFor="let sala of listaSalas">{{ sala }}</option>
                 </select>
               </td>

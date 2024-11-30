@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { AgendaComponent } from './features/agenda/agenda.component';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  template: '<app-agenda></app-agenda>', // Renderiza o componente Agenda
-  imports: [AgendaComponent] // Adiciona o AgendaComponent como importação
+  template: `<router-outlet></router-outlet>`, 
+  imports: [RouterModule] // Adiciona o AgendaComponent como importação
 })
 export class AppComponent {}
 

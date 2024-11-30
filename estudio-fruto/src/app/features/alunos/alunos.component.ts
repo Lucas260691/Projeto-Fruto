@@ -1,11 +1,40 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-alunos',
-  imports: [],
+  standalone: true,
   templateUrl: './alunos.component.html',
-  styleUrl: './alunos.component.scss'
+  styleUrls: ['./alunos.component.scss'],
+  imports: [CommonModule, FormsModule],
 })
 export class AlunosComponent {
+  aluno = {
+    nome: '',
+    email: '',
+    contato: '',
+    codAlune: '',
+    tipoPlano: '',
+    frequenciaSemanal: '',
+    diasFixos: '',
+  };
 
+  salvarAluno(): void {
+    console.log('Aluno salvo:', this.aluno);
+    alert('Aluno cadastrado com sucesso!');
+    this.limparFormulario();
+  }
+
+  limparFormulario(): void {
+    this.aluno = {
+      nome: '',
+      email: '',
+      contato: '',
+      codAlune: '',
+      tipoPlano: '',
+      frequenciaSemanal: '',
+      diasFixos: '',
+    };
+  }
 }
