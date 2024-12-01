@@ -1,173 +1,296 @@
+/* Estilo geral da agenda */
 .agenda-container {
   display: flex;
   flex-direction: column;
   font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  padding: 10px;
-}
-
-.barra-superior {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.barra-superior button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.barra-superior span {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.layout-principal {
-  display: flex;
-  gap: 20px;
-}
-
-.calendario-lateral {
-  width: 250px;
+  background-color: #f4f4f9;
   padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.calendario-lateral h3 {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.navegacao-mes {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.dias-semana {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: bold;
-}
-
-.dias {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-}
-
-.dias button {
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.dias button.ativo {
-  background-color: #007bff;
-  color: white;
-}
-
-.legendas {
-  display: flex;
-  flex-direction: column;
   gap: 20px;
-}
 
-.legenda-instrutores {
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+  /* Barra superior */
+  .barra-superior {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
 
-.legenda-instrutores ul {
-  list-style: none;
-  padding: 0;
-}
+    .h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
 
-.legenda-instrutores li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
+    .botoes-acao {
+      display: flex;
+      gap: 10px; /* Espaçamento entre os botões */
+    }
 
-.cor-instrutor {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  border-radius: 50%;
-}
+    .btn-cadastrar-aluno,
+    .btn-salvar-agenda {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
 
-.rodizio-turmas {
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+      &:hover {
+        background-color: #218838;
+      }
+    }
+    
+  }
 
-.rodizio-turmas table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  /* Layout principal */
+  .conteudo-principal {
+    display: flex;
+    gap: 20px;
 
-.rodizio-turmas th,
-.rodizio-turmas td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-.agenda {
-  flex: 1;
-}
-
-.agenda table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.agenda th,
-.agenda td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-
-.celula-aula ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
- 
-  /* Responsividade */
-  @media (max-width: 768px) {
-    .legendas-container {
+    /* Coluna lateral esquerda */
+    .coluna-esquerda {
+      display: flex;
       flex-direction: column;
       gap: 20px;
+      width: 300px;
+
+      /* Calendário lateral */
+      .calendario {
+        background-color: #ffffff;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        h3 {
+          text-align: center;
+          margin-bottom: 15px;
+          color: #007bff;
+        }
+
+        .navegacao-mes {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 15px;
+
+          button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+
+            &:hover {
+              background-color: #0056b3;
+            }
+          }
+
+          span {
+            font-size: 1rem;
+            font-weight: bold;
+          }
+        }
+
+        .dias-semana,
+        .dias {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 5px;
+          text-align: center;
+        }
+
+        .dias button {
+          background-color: #f0f0f0;
+          border: 1px solid #ddd;
+          padding: 10px;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #007bff;
+            color: white;
+          }
+
+          &.ativo {
+            background-color: #007bff;
+            color: white;
+          }
+        }
+      }
+
+      /* Legenda dos instrutores */
+      .legenda-instrutores {
+        background-color: #ffffff;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        h3 {
+          text-align: center;
+          margin-bottom: 10px;
+          color: #007bff;
+          font-size: 1.1rem;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+
+          li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+
+            .cor-instrutor {
+              width: 20px;
+              height: 20px;
+              margin-right: 10px;
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+
+      /* Rodízio de turmas */
+      .rodizio-turmas {
+        background-color: #ffffff;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        h3 {
+          text-align: center;
+          margin-bottom: 10px;
+          color: #007bff;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+
+          th,
+          td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+          }
+
+          th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+          }
+
+          select {
+            width: 100%;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+          }
+        }
+      }
     }
-  
-    .legenda-instrutores,
-    .legenda-salas {
-      width: 100%;
-    }
-  
-    table {
-      font-size: 0.9rem;
+
+    /* Tabela da agenda */
+    .tabela-horarios {
+      flex: 1;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 10px;
+          text-align: center;
+        }
+
+        th {
+          background-color: #007bff;
+          color: white;
+          font-weight: bold;
+        }
+
+        .celula-aula {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          align-items: flex-start;
+
+          li {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            width: 100%;
+            cursor: grab;
+        
+            &:hover {
+              background-color: #e0e0e0;
+            }
+        
+            .editable-input {
+              border: 1px solid #ccc;
+              border-radius: 4px;
+              padding: 5px;
+              background: none;
+              font-size: 1rem;
+              width: 100%;
+              outline: none;
+              box-sizing: border-box;
+            }
+          }
+
+          .editable-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+          }
+          
+          .add-aluno button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        
+            &:hover {
+              background-color: #0056b3;
+            }
+          }
+        }
+      }
     }
   }
-  
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .conteudo-principal {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .coluna-esquerda,
+  .tabela-horarios {
+    width: 100%;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+}

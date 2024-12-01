@@ -1,50 +1,43 @@
 <div class="agenda-container">
-  <!-- Barra Superior com Data Atual -->
   <div class="barra-superior">
-    <button (click)="mudarDia(-1)">&#9664; Dia Anterior</button>
-    <span>{{ diaAtual | date: 'EEEE, dd MMMM yyyy' }}</span>
-    <button (click)="mudarDia(1)">Próximo Dia &#9654;</button>
-  </div>
-
-  <div class="layout-principal">
-    <!-- Calendário Lateral -->
-    <div class="calendario-lateral">
-      <h3>Calendário</h3>
-      <div class="navegacao-mes">
-        <button (click)="mudarMes(-1)">&#9664;</button>
-        <span>{{ mesAtual }} {{ anoAtual }}</span>
-        <button (click)="mudarMes(1)">&#9654;</button>
-      </div>
-      <div class="dias-semana">
-        <span *ngFor="let dia of diasSemana">{{ dia }}</span>
-      </div>
-      <div class="dias">
-        <button
-          *ngFor="let dia of diasDoMes"
-          [class.ativo]="dia === diaAtual.getDate()"
-          (click)="selecionarDia(dia)"
-        >
-          {{ dia }}
-        </button>
-      </div>
+    <h1>Agenda</h1>
+    <div class="botoes-acao">
+    <button class="btn-cadastrar-aluno" (click)="irParaCadastroAluno()">Cadastrar Aluno</button>
+    <button class="btn-salvar-agenda" (click)="salvarAgenda()">Salvar Agenda</button>
     </div>
-
-    <!-- Legenda dos Instrutores e Turmas -->
-    <div class="legendas">
-      <!-- Legenda dos Instrutores -->
-      <div class="legenda-instrutores">
-        <h3>Legenda dos Instrutores</h3>
+  </div>
+  <div class="conteudo-principal">
+    <aside class="coluna-esquerda">
+      <section class="calendario">
+        <div class="navegacao-mes">
+          <button (click)="mudarMes(-1)">&#9664;</button>
+          <span>{{ mesAtual }} {{ anoAtual }}</span>
+          <button (click)="mudarMes(1)">&#9654;</button>
+        </div>
+        <div class="dias-semana">
+          <span *ngFor="let dia of diasSemana">{{ dia }}</span>
+        </div>
+        <div class="dias">
+          <button
+            *ngFor="let dia of diasDoMes"
+            [class.ativo]="dia === diaAtual.getDate()"
+            (click)="selecionarDia(dia)"
+          >
+            {{ dia }}
+          </button>
+        </div>
+      </section>
+      <section class="legenda-instrutores">
+        <h3>Instrutores</h3>
         <ul>
           <li *ngFor="let instrutor of instrutores">
-            <span [style.background-color]="instrutor.cor" class="cor-instrutor"></span>
+            <span class="cor-instrutor" [style.background-color]="instrutor.cor"></span>
             {{ instrutor.nome }}
           </li>
         </ul>
-      </div>
-
-      <!-- Rodízio das Turmas -->
-      <div class="rodizio-turmas">
-        <h3>Rodízio das Turmas</h3>
+      </section>
+      <section class="rodizio-turmas">
+        <h3>Rodízio de Turmas</h3>
         <table>
           <thead>
             <tr>
@@ -56,18 +49,16 @@
             <tr *ngFor="let dia of diasDaSemana">
               <td>{{ dia }}</td>
               <td>
-                <select [(ngModel)]="salas[dia].nome" name="sala">
-                  <option *ngFor="let sala of listaSalas">{{ sala }}</option>
+                <select [(ngModel)]="salas[dia].nome">
+                  <option *ngFor="let sala of listaSalas" [value]="sala">{{ sala }}</option>
                 </select>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-    <!-- Agenda -->
-    <div class="agenda">
+      </section>
+    </aside>
+    <section class="tabela-horarios">
       <table>
         <thead>
           <tr>
@@ -78,22 +69,28 @@
         <tbody>
           <tr *ngFor="let horario of horarios">
             <td>{{ horario }}</td>
-            <td *ngFor="let dia of diasDaSemana">
-              <!-- Células da agenda -->
-              <div
-                class="celula-aula"
-                [style.background-color]="getCorInstrutor(agenda[horario][dia]?.instrutor || null)"
-              >
-                <ul>
-                  <li *ngFor="let aluno of agenda[horario][dia]?.alunos">
-                    {{ aluno }}
-                  </li>
-                </ul>
-              </div>
+            <td *ngFor="let dia of diasDaSemana" cdkDropList [cdkDropListData]="agenda[horario]?.[dia]?.alunos || []" (cdkDropListDropped)="onDrop($event, horario, dia)">
+              <ul class="celula-aula">
+                <li *ngFor="let aluno of agenda[horario]?.[dia]?.alunos || []; index as index" cdkDrag>
+                  <input
+                    type="text"
+                    [(ngModel)]="agenda[horario][dia].alunos[index]"
+                    class="editable-input"
+                  />
+                </li>
+                <li class="add-aluno">
+                  <button 
+                    (click)="adicionarAluno(horario, dia)" 
+                    [disabled]="(agenda[horario]?.[dia]?.alunos?.length || 0) >= 4">
+                    +
+                  </button>
+                </li>
+              </ul>
             </td>
+            
           </tr>
         </tbody>
       </table>
-    </div>
+    </section>
   </div>
 </div>

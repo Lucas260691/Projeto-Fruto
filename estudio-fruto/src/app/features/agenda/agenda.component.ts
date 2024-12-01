@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Router } from '@angular/router';
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-agenda',
@@ -11,6 +12,18 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   imports: [CommonModule, FormsModule, DragDropModule]
 })
 export class AgendaComponent implements OnInit {
+  constructor(private router: Router) {}
+
+  irParaCadastroAluno(): void {
+    this.router.navigate(['/alunos']); // Redireciona para a página de cadastro de aluno
+  }
+
+  salvarAgenda(): void {
+    console.log('Dados da agenda:', this.agenda);
+    // Aqui você pode integrar com o backend ou salvar os dados localmente
+    alert('Agenda salva com sucesso!');
+  }
+
   diasDaSemana: string[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
   diasSemana: string[] = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
   diasDoMes: number[] = [];
@@ -79,21 +92,25 @@ export class AgendaComponent implements OnInit {
 
   inicializarAgenda(): void {
     this.horarios.forEach((horario) => {
-      this.agenda[horario] = {};
+      if (!this.agenda[horario]) {
+        this.agenda[horario] = {};
+      }
       this.diasDaSemana.forEach((dia) => {
-        this.agenda[horario][dia] = {
-          alunos: [],
-          instrutor: null
-        };
+        if (!this.agenda[horario][dia]) {
+          this.agenda[horario][dia] = { alunos: [], instrutor: null };
+        }
       });
     });
   }
 
   inicializarSalas(): void {
     this.diasDaSemana.forEach((dia) => {
-      this.salas[dia] = { nome: '', cor: null };
+      if (!this.salas[dia]) {
+        this.salas[dia] = { nome: '', cor: null }; // Inicializa com nome vazio e cor nula
+      }
     });
   }
+  
 
   carregarAgenda(): void {
     console.log(`Carregando agenda para ${this.diaAtual.toLocaleDateString()}`);
@@ -106,6 +123,7 @@ export class AgendaComponent implements OnInit {
     const instrutorEncontrado = this.instrutores.find(i => i.nome === instrutor);
     return instrutorEncontrado ? instrutorEncontrado.cor : '#f0f0f0';
   }
+  
 
   selecionarCor(dia: string): void {
     const instrutorSelecionado: string | null = prompt(
@@ -133,4 +151,52 @@ export class AgendaComponent implements OnInit {
       this.salas[dia].nome = this.listaSalas[salaIndex];
     });
   }
+
+  adicionarAluno(horario: string, dia: string): void {
+    if (!this.agenda[horario]) {
+      this.agenda[horario] = {};
+    }
+    if (!this.agenda[horario][dia]) {
+      this.agenda[horario][dia] = { alunos: [], instrutor: null };
+    }
+    if (this.agenda[horario][dia].alunos.length >= 4) {
+      alert('A capacidade máxima de 4 alunos por célula foi atingida.');
+      return;
+    }
+
+    this.agenda[horario][dia].alunos.push(''); // Adiciona um novo aluno
+  }
+  
+
+  atualizarAluno(horario: string, dia: string, index: number, novoNome: string): void {
+    if (this.agenda[horario]?.[dia]?.alunos && index >= 0) {
+      this.agenda[horario][dia].alunos[index] = novoNome.trim(); // Remove espaços desnecessários
+    }
+  }
+
+  onDrop(event: CdkDragDrop<string[], any, any>, horario: string, dia: string): void {
+    // Garante que os dados dos containers não sejam undefined
+    const previousData = event.previousContainer.data || [];
+    const currentData = event.container.data || [];
+  
+    if (event.previousContainer === event.container) {
+      moveItemInArray(currentData, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(previousData, currentData, event.previousIndex, event.currentIndex);
+    }
+  
+    // Atualiza a agenda para garantir a consistência
+    if (!this.agenda[horario]) {
+      this.agenda[horario] = {};
+    }
+    if (!this.agenda[horario][dia]) {
+      this.agenda[horario][dia] = { alunos: currentData, instrutor: null };
+    } else {
+      this.agenda[horario][dia].alunos = currentData;
+    }
+  }
+  
+  
+  
+
 }

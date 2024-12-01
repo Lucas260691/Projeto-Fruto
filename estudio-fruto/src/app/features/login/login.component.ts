@@ -20,7 +20,7 @@ export class LoginComponent {
     // Simulação de validação
     if (this.email === 'admin@estudio.com' && this.senha === '123456') {
       alert('Login realizado com sucesso!');
-      this.router.navigate(['/alunos']);
+      this.router.navigate(['/agenda']);
     } else {
       alert('E-mail ou senha incorretos.');
     }
