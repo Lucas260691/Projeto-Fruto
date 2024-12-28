@@ -21,8 +21,16 @@ export class AgendaComponent implements OnInit, AfterViewChecked {
   ngOnInit(): void {
     this.mesAtual = this.meses[this.diaAtual.getMonth()];
     this.atualizarDiasDoMes();
-    this.inicializarAgenda();
+    //this.inicializarAgenda();
     this.inicializarSalas();
+
+    this.turmas.forEach((turma) => {
+      turma.agenda = {};
+      this.inicializarAgenda(turma.agenda);
+    });
+  
+    // Define a primeira turma como selecionada e carrega sua agenda
+    this.selecionarTurma(0);
   }
 
   ngAfterViewChecked(): void {
@@ -42,8 +50,8 @@ export class AgendaComponent implements OnInit, AfterViewChecked {
   }
 
   salvarAgenda(): void {
-    console.log('Dados da agenda:', this.agenda);
-    alert('Agenda salva com sucesso!');
+    this.turmas[this.turmaSelecionada].agenda = { ...this.agenda };
+    alert(`Agenda da ${this.turmas[this.turmaSelecionada].nome} salva com sucesso!`);
   }
 
   diasDaSemana: string[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
@@ -51,7 +59,7 @@ export class AgendaComponent implements OnInit, AfterViewChecked {
   diasDoMes: number[] = [];
   listaSalas: string[] = ['Reformer', 'Cadillac', 'Chair', 'Mat', 'Barrel'];
   horarios: string[] = [
-    '08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00',
+    '07:00 - 08:00','08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00',
     '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00',
     '14:00 - 15:00', '15:00 - 16:00', '16:00 - 17:00',
     '17:00 - 18:00', '18:00 - 19:00', '19:00 - 20:00',
@@ -74,6 +82,24 @@ export class AgendaComponent implements OnInit, AfterViewChecked {
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
   mesAtual: string = '';
+
+turmas: { nome: string; agenda: Record<string, Record<string, { alunos: string[]; instrutor: string | null }>> }[] = 
+[
+  { nome: 'Turma 1', agenda: {} },
+  { nome: 'Turma 2', agenda: {} },
+  { nome: 'Turma 3', agenda: {} },
+  { nome: 'Turma 4', agenda: {} },
+  { nome: 'Turma 5', agenda: {} },
+];
+
+turmaSelecionada: number = 0; // Índice da turma ativa
+
+
+ selecionarTurma(indice: number): void {
+   this.turmaSelecionada = indice;
+   this.agenda = this.turmas[indice].agenda;
+ }
+
 
   mudarDia(delta: number): void {
     const novaData = new Date(this.diaAtual);
@@ -102,18 +128,36 @@ export class AgendaComponent implements OnInit, AfterViewChecked {
     this.diaAtual = novaData;
   }
 
-  inicializarAgenda(): void {
+  inicializarAgenda(agendaDestino?: Record<string, Record<string, { alunos: string[]; instrutor: string | null }>>): void {
+    const agenda = agendaDestino || this.agenda; // Use a agenda passada ou a agenda geral
     this.horarios.forEach((horario) => {
-      if (!this.agenda[horario]) {
-        this.agenda[horario] = {};
+      if (!agenda[horario]) {
+        agenda[horario] = {};
       }
       this.diasDaSemana.forEach((dia) => {
-        if (!this.agenda[horario][dia]) {
-          this.agenda[horario][dia] = { alunos: [], instrutor: null };
+        if (!agenda[horario][dia]) {
+          agenda[horario][dia] = { alunos: [], instrutor: null };
         }
       });
     });
   }
+  
+
+
+
+
+  //inicializarAgenda(): void {
+   // this.horarios.forEach((horario) => {
+      //if (!this.agenda[horario]) {
+        //this.agenda[horario] = {};
+      //}
+      //this.diasDaSemana.forEach((dia) => {
+        //if (!this.agenda[horario][dia]) {
+          //this.agenda[horario][dia] = { alunos: [], instrutor: null };
+        //}
+      //});
+    //});
+  //}
 
   inicializarSalas(): void {
     this.diasDaSemana.forEach((dia) => {
