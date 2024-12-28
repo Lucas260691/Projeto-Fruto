@@ -1,9 +1,10 @@
+<!-- agenda.component.html -->
 <div class="agenda-container">
   <div class="barra-superior">
     <h1>Agenda</h1>
     <div class="botoes-acao">
-    <button class="btn-cadastrar-aluno" (click)="irParaCadastroAluno()">Cadastrar Aluno</button>
-    <button class="btn-salvar-agenda" (click)="salvarAgenda()">Salvar Agenda</button>
+      <button class="btn-cadastrar-aluno" (click)="irParaCadastroAluno()">Cadastrar Aluno</button>
+      <button class="btn-salvar-agenda" (click)="salvarAgenda()">Salvar Agenda</button>
     </div>
   </div>
   <div class="conteudo-principal">
@@ -63,31 +64,39 @@
         <thead>
           <tr>
             <th>Horário</th>
-            <th *ngFor="let dia of diasDaSemana">{{ dia }}</th>
+            <th *ngFor="let dia of diasDaSemana; trackBy: trackByDia">{{ dia }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let horario of horarios">
+          <tr *ngFor="let horario of horarios; trackBy: trackByHorario">
             <td>{{ horario }}</td>
-            <td *ngFor="let dia of diasDaSemana" cdkDropList [cdkDropListData]="agenda[horario]?.[dia]?.alunos || []" (cdkDropListDropped)="onDrop($event, horario, dia)">
+            <td *ngFor="let dia of diasDaSemana; trackBy: trackByDia">
               <ul class="celula-aula">
-                <li *ngFor="let aluno of agenda[horario]?.[dia]?.alunos || []; index as index" cdkDrag>
+                <li *ngFor="let aluno of agenda[horario]?.[dia]?.alunos; index as index; trackBy: trackByIndex">
                   <input
                     type="text"
-                    [(ngModel)]="agenda[horario][dia].alunos[index]"
+                    [value]="agenda[horario][dia].alunos[index]"
+                    (input)="atualizarAlunoComEvento(horario, dia, index, $event)"
+                    [attr.data-horario]="horario"
+                    [attr.data-dia]="dia"
+                    [attr.data-index]="index"
+                    (focus)="alunoFocus = { horario, dia, index }"
+                    (blur)="alunoFocus = null"
                     class="editable-input"
+                    [placeholder]="'Nome do aluno'"
+                    [style.background-color]="getCorInstrutor(agenda[horario][dia]?.instrutor)"
                   />
                 </li>
                 <li class="add-aluno">
-                  <button 
-                    (click)="adicionarAluno(horario, dia)" 
-                    [disabled]="(agenda[horario]?.[dia]?.alunos?.length || 0) >= 4">
+                  <button
+                    (click)="adicionarAluno(horario, dia)"
+                    [disabled]="(agenda[horario]?.[dia]?.alunos?.length || 0) >= 4"
+                  >
                     +
                   </button>
                 </li>
               </ul>
             </td>
-            
           </tr>
         </tbody>
       </table>

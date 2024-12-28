@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+// agenda.component.ts
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,16 +12,37 @@ import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from 
   styleUrls: ['./agenda.component.scss'],
   imports: [CommonModule, FormsModule, DragDropModule]
 })
-export class AgendaComponent implements OnInit {
+export class AgendaComponent implements OnInit, AfterViewChecked {
+
+  alunoFocus: { horario: string; dia: string; index: number } | null = null;
+
   constructor(private router: Router) {}
 
+  ngOnInit(): void {
+    this.mesAtual = this.meses[this.diaAtual.getMonth()];
+    this.atualizarDiasDoMes();
+    this.inicializarAgenda();
+    this.inicializarSalas();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.alunoFocus) {
+      const { horario, dia, index } = this.alunoFocus;
+      const element = document.querySelector(
+        `input[data-horario="${horario}"][data-dia="${dia}"][data-index="${index}"]`
+      ) as HTMLInputElement;
+      if (element && document.activeElement !== element) {
+        element.focus();
+      }
+    }
+  }
+
   irParaCadastroAluno(): void {
-    this.router.navigate(['/alunos']); // Redireciona para a página de cadastro de aluno
+    this.router.navigate(['/alunos']);
   }
 
   salvarAgenda(): void {
     console.log('Dados da agenda:', this.agenda);
-    // Aqui você pode integrar com o backend ou salvar os dados localmente
     alert('Agenda salva com sucesso!');
   }
 
@@ -53,25 +75,16 @@ export class AgendaComponent implements OnInit {
   ];
   mesAtual: string = '';
 
-  ngOnInit(): void {
-    this.mesAtual = this.meses[this.diaAtual.getMonth()];
-    this.atualizarDiasDoMes();
-    this.inicializarAgenda();
-    this.inicializarSalas();
-  }
-
   mudarDia(delta: number): void {
     const novaData = new Date(this.diaAtual);
     novaData.setDate(this.diaAtual.getDate() + delta);
     this.diaAtual = novaData;
-    console.log(`Novo dia: ${this.diaAtual.toLocaleDateString()}`);
   }
 
   mudarMes(delta: number): void {
     const novaData = new Date(this.diaAtual);
     novaData.setMonth(this.diaAtual.getMonth() + delta);
     this.diaAtual = novaData;
-
     this.mesAtual = this.meses[this.diaAtual.getMonth()];
     this.anoAtual = this.diaAtual.getFullYear();
     this.atualizarDiasDoMes();
@@ -87,7 +100,6 @@ export class AgendaComponent implements OnInit {
     const novaData = new Date(this.diaAtual);
     novaData.setDate(dia);
     this.diaAtual = novaData;
-    console.log(`Dia selecionado: ${this.diaAtual.toLocaleDateString()}`);
   }
 
   inicializarAgenda(): void {
@@ -106,11 +118,10 @@ export class AgendaComponent implements OnInit {
   inicializarSalas(): void {
     this.diasDaSemana.forEach((dia) => {
       if (!this.salas[dia]) {
-        this.salas[dia] = { nome: '', cor: null }; // Inicializa com nome vazio e cor nula
+        this.salas[dia] = { nome: '', cor: null };
       }
     });
   }
-  
 
   carregarAgenda(): void {
     console.log(`Carregando agenda para ${this.diaAtual.toLocaleDateString()}`);
@@ -118,24 +129,23 @@ export class AgendaComponent implements OnInit {
 
   getCorInstrutor(instrutor: string | null | undefined): string {
     if (!instrutor) {
-      return '#f0f0f0'; // Cor padrão caso o instrutor não esteja definido
+      return '#f0f0f0';
     }
     const instrutorEncontrado = this.instrutores.find(i => i.nome === instrutor);
     return instrutorEncontrado ? instrutorEncontrado.cor : '#f0f0f0';
   }
-  
 
   selecionarCor(dia: string): void {
     const instrutorSelecionado: string | null = prompt(
       'Digite o nome do instrutor para escolher a cor:\n' +
       this.instrutores.map(i => `${i.nome} (${i.cor})`).join('\n')
     );
-  
+
     if (instrutorSelecionado === null || instrutorSelecionado.trim() === '') {
       alert('Nenhum instrutor foi selecionado.');
       return;
     }
-  
+
     const instrutor = this.instrutores.find(i => i.nome === instrutorSelecionado);
     if (instrutor) {
       this.salas[dia].cor = instrutor.cor;
@@ -143,13 +153,24 @@ export class AgendaComponent implements OnInit {
       alert('Instrutor não encontrado!');
     }
   }
-  
 
   rodizioSalas(): void {
     this.diasDaSemana.forEach((dia, index) => {
       const salaIndex = index % this.listaSalas.length;
       this.salas[dia].nome = this.listaSalas[salaIndex];
     });
+  }
+
+  trackByHorario(index: number, horario: string): string {
+    return horario;
+  }
+
+  trackByDia(index: number, dia: string): string {
+    return dia;
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 
   adicionarAluno(horario: string, dia: string): void {
@@ -164,28 +185,25 @@ export class AgendaComponent implements OnInit {
       return;
     }
 
-    this.agenda[horario][dia].alunos.push(''); // Adiciona um novo aluno
+    this.agenda[horario][dia].alunos.push('');
   }
-  
 
-  atualizarAluno(horario: string, dia: string, index: number, novoNome: string): void {
-    if (this.agenda[horario]?.[dia]?.alunos && index >= 0) {
-      this.agenda[horario][dia].alunos[index] = novoNome.trim(); // Remove espaços desnecessários
-    }
+  atualizarAlunoComEvento(horario: string, dia: string, index: number, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const novoNome = inputElement.value.trim();
+    this.agenda[horario][dia].alunos[index] = novoNome;
   }
 
   onDrop(event: CdkDragDrop<string[], any, any>, horario: string, dia: string): void {
-    // Garante que os dados dos containers não sejam undefined
     const previousData = event.previousContainer.data || [];
     const currentData = event.container.data || [];
-  
+
     if (event.previousContainer === event.container) {
       moveItemInArray(currentData, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(previousData, currentData, event.previousIndex, event.currentIndex);
     }
-  
-    // Atualiza a agenda para garantir a consistência
+
     if (!this.agenda[horario]) {
       this.agenda[horario] = {};
     }
@@ -195,8 +213,4 @@ export class AgendaComponent implements OnInit {
       this.agenda[horario][dia].alunos = currentData;
     }
   }
-  
-  
-  
-
 }
