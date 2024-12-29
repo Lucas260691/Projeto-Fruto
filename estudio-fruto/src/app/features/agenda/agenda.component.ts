@@ -13,7 +13,8 @@ import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from 
   imports: [CommonModule, FormsModule, DragDropModule]
 })
 export class AgendaComponent implements OnInit, AfterViewChecked {
-
+  
+  isEditing: boolean = false; // Estado de edição da agenda
   alunoFocus: { horario: string; dia: string; index: number } | null = null;
 
   constructor(private router: Router) {}
@@ -52,6 +53,16 @@ export class AgendaComponent implements OnInit, AfterViewChecked {
   salvarAgenda(): void {
     this.turmas[this.turmaSelecionada].agenda = { ...this.agenda };
     alert(`Agenda da ${this.turmas[this.turmaSelecionada].nome} salva com sucesso!`);
+  }
+
+  editarAgenda(): void {
+    this.isEditing = !this.isEditing; // Alterna entre os modos de edição e visualização
+    if (this.isEditing) {
+      console.log('Modo de edição ativado.');
+    } else {
+      console.log('Modo de edição desativado.');
+      this.salvarAgenda(); // Salva os dados ao sair do modo de edição
+    }
   }
 
   diasDaSemana: string[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
