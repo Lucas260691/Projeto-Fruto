@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -9,7 +10,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   standalone: true,
   templateUrl: './cadastrar-instrutor.component.html',
   styleUrl: './cadastrar-instrutor.component.scss',
-  imports: [FormsModule, CommonModule, DragDropModule]
+  imports: [FormsModule, CommonModule, DragDropModule,HttpClientModule]
 })
 export class CadastrarInstrutorComponent {
 
