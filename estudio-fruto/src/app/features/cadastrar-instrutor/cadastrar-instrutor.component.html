@@ -1,1 +1,46 @@
-<p>cadastrar-instrutor works!</p>
+<div class="cadastro-container">
+    <h1>Cadastrar Instrutor</h1>
+    <form (ngSubmit)="cadastrarInstrutor()">
+      <label for="nome">Nome:</label>
+      <input
+        id="nome"
+        [(ngModel)]="instrutor.nome"
+        name="nome"
+        required
+        placeholder="Digite o nome"
+      />
+  
+      <label for="email">E-mail:</label>
+      <input
+        id="email"
+        [(ngModel)]="instrutor.email"
+        name="email"
+        type="email"
+        required
+        placeholder="Digite o e-mail"
+      />
+  
+      <label for="contato">Contato:</label>
+      <input
+        id="contato"
+        [(ngModel)]="instrutor.contato"
+        name="contato"
+        type="tel"
+        required
+        placeholder="Digite o telefone"
+      />
+  
+      <label for="senha">Senha:</label>
+      <input
+        id="senha"
+        [(ngModel)]="instrutor.senha"
+        name="senha"
+        type="password"
+        required
+        placeholder="Digite a senha"
+      />
+  
+      <button type="submit">Cadastrar</button>
+    </form>
+  </div>
+  
