@@ -22,7 +22,7 @@ export class LoginComponent {
     // Simulação de validação
     const loginData = { email: this.email, senha: this.senha };
 
-    this.http.post('/api/instrutores/login', loginData).subscribe(
+    this.http.post('/api/login', loginData).subscribe(
       (response: any) => {
         alert('Login realizado com sucesso!');
         localStorage.setItem('instrutor', JSON.stringify(response));

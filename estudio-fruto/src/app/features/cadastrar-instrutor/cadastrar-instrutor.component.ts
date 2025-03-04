@@ -17,22 +17,23 @@ export class CadastrarInstrutorComponent {
   instrutor = {
     nome: '',
     email: '',
-    contato: '',
-    senha: ''
+    contato: ''
   };
 
   constructor(private http: HttpClient) {}
 
-  cadastrarInstrutor(): void {
-    this.http.post('/api/instrutores/cadastrar', this.instrutor).subscribe(
-      () => {
-        alert('Instrutor cadastrado com sucesso!');
-        this.instrutor = { nome: '', email: '', contato: '', senha: '' };
-      },
-      (error) => {
-        alert(`Erro ao cadastrar instrutor: ${error.error}`);
-      }
-    );
+  async cadastrarInstrutor(): Promise<void> {
+    try {
+      const response = await this.http
+        .post('/api/instrutores/cadastrar', this.instrutor)
+        .toPromise();
+      alert('Instrutor cadastrado com sucesso!');
+      console.log(response);
+      this.instrutor = { nome: '', email: '', contato: ''};
+    } catch (error) {
+      console.error('Erro ao cadastrar instrutor:', error);
+      alert(`Erro ao cadastrar instrutor: ${(error as any).message}`);
+    }
   }
 
 }
